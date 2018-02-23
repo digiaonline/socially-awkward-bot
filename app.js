@@ -9,6 +9,19 @@ const bodyParser = require('body-parser')
 const axios = require('axios')
 const app = express()
 const PORT = process.env.PORT || 1337
+const { WebClient } = require('@slack/client');
+const token = process.env.SLACK_TOKEN;
+
+const web = new WebClient(token);
+const channelId = 'C9EN8C66T';
+
+// See: https://api.slack.com/methods/chat.postMessage
+web.chat.postMessage(channelId, 'Hello there')
+  .then((res) => {
+    // `res` contains information about the posted message
+    console.log('Message sent: ', res.ts);
+  })
+  .catch(console.error);
 
 app.use(bodyParser.json({extended: true}))
 
