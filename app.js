@@ -73,8 +73,9 @@ rtm.on(RTM_EVENTS.MESSAGE, (message) => {
   if (message.subtype && message.subtype === 'bot_message') {
     return;
   }
+  console.log(message)
 
-  rtm.sendMessage(`Did you say: ${message}`, channel.id)
+  rtm.sendMessage(`Did you say: ${message}`, channelId)
     // Returns a promise that resolves when the message is sent
     .then(() => console.log(`Message sent to channel ${channel.name}`))
     .catch(console.error)
