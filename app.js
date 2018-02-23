@@ -9,35 +9,35 @@ const bodyParser = require('body-parser')
 const axios = require('axios')
 const app = express()
 const PORT = process.env.PORT || 1337
-const { RtmClient, CLIENT_EVENTS, RTM_EVENTS, WebClient } = require('@slack/client');
+const {RtmClient, CLIENT_EVENTS, RTM_EVENTS, WebClient} = require('@slack/client')
 
-const channelId = 'C9EN8C66T';
+const channelId = 'C9EN8C66T'
 
 // An access token (from your Slack app or custom integration - usually xoxb)
-const token = process.env.SLACK_TOKEN;
+const token = process.env.SLACK_TOKEN
 
 // Cache of data
-const appData = {};
+const appData = {}
 
 // Initialize the RTM client with the recommended settings. Using the defaults for these
 // settings is deprecated.
 const rtm = new RtmClient(token, {
   dataStore: false,
   useRtmConnect: true,
-});
+})
 
 // Need a web client to find a channel where the app can post a message
-const web = new WebClient(token);
+const web = new WebClient(token)
 
 // Load the current channels list asynchrously
-let channelsListPromise = web.channels.list();
+let channelsListPromise = web.channels.list()
 
 // The client will emit an RTM.AUTHENTICATED event on when the connection data is available
 // (before the connection is open)
 rtm.on(CLIENT_EVENTS.RTM.AUTHENTICATED, (connectData) => {
   // Cache the data necessary for this app in memory
-  appData.selfId = connectData.self.id;
-  console.log(`Logged in as ${appData.selfId} of team ${connectData.team.id}`);
+  appData.selfId = connectData.self.id
+  console.log(`Logged in as ${appData.selfId} of team ${connectData.team.id}`)
 })
 
 // The client will emit an RTM.RTM_CONNECTION_OPENED the connection is ready for
@@ -64,25 +64,25 @@ rtm.on(CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED, () => {
 })
 
 // Start the connecting process
-rtm.start();
+rtm.start()
 
 rtm.on(RTM_EVENTS.MESSAGE, (message) => {
   // For structure of `message`, see https://api.slack.com/events/message
 
   // Skip messages that are from a bot or my own user ID
-  if (message.subtype && message.subtype === 'bot_message') {
-    return;
+  if (message.subtype && message.subtype === 'bot_message' || message.user === 'U9DF7CSLF') {
+    return
   }
   console.log(message)
 
-  rtm.sendMessage(`Did you say: ${message}`, channelId)
+  rtm.sendMessage(`Did you say: ${message.text}`, message.channel)
     // Returns a promise that resolves when the message is sent
-    .then(() => console.log(`Message sent to channel ${channel.name}`))
+    .then(() => console.log(`Message sent to channel ${message.channel}`))
     .catch(console.error)
 
   // Log the message
-  console.log('New message: ', message);
-});
+  console.log('New message: ', message)
+})
 
 app.use(bodyParser.json({extended: true}))
 
@@ -100,44 +100,44 @@ app.use((req, res, next) => {
 
 app.get('/*', (req, res, next) => {
 
-    try {
-      // console.log(req.headers)
-      res.status(200).json('hello')
-    } catch(err) {
-      err.response
-        ? res.status(err.response.status).send(err.response.data)
-        : res.status(500).send({message: err.toString()})
-    }
+  try {
+    // console.log(req.headers)
+    res.status(200).json('hello')
+  } catch(err) {
+    err.response
+      ? res.status(err.response.status).send(err.response.data)
+      : res.status(500).send({message: err.toString()})
+  }
 })
 
 app.post('/*', (req, res, next) => {
-    const userName = req.body.user_name
-    const botPayload = {
-      text: 'Ya cunts!'
+  const userName = req.body.user_name
+  const botPayload = {
+    text: 'Ya cunts!',
+  }
+  console.log(req)
+  try {
+    if (userName !== 'willebot') {
+      return res.status(200).json(botPayload)
+    } else {
+      return res.status(200).end()
     }
-    console.log(req)
-    try {
-      if (userName !== 'willebot') {
-        return res.status(200).json(botPayload)
-      } else {
-        return res.status(200).end()
-      }
-    } catch(err) {
-      err.response
-        ? res.status(err.response.status).send(err.response.data)
-        : res.status(500).send({message: err.toString()})
-    }
+  } catch(err) {
+    err.response
+      ? res.status(err.response.status).send(err.response.data)
+      : res.status(500).send({message: err.toString()})
+  }
 })
 
 app.put('/*', (req, res, next) => {
 
-    try {
-      res.status(200).json('hello')
-    } catch(err) {
-       err.response
-         ? res.status(err.response.status).send(err.response.data)
-         : res.status(500).send({message: err.toString()})
-   }
+  try {
+    res.status(200).json('hello')
+  } catch(err) {
+    err.response
+      ? res.status(err.response.status).send(err.response.data)
+      : res.status(500).send({message: err.toString()})
+  }
 })
 
 // SERVER LISTENER
