@@ -1,0 +1,37 @@
+Arguments: 
+  /Users/jotannin/.nvm/versions/node/v6.11.2/bin/node /Users/jotannin/.nvm/versions/node/v6.11.2/bin/yarn
+
+PATH: 
+  /Users/jotannin/.nvm/versions/node/v6.11.2/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+
+Yarn version: 
+  1.3.2
+
+Node version: 
+  6.11.2
+
+Platform: 
+  darwin x64
+
+npm manifest: 
+  "dependencies": {
+     "axios": "^0.17.1",
+     "body-parser": "^1.18.2",
+     "express": "^4.16.2",
+     "lodash": "^4.17.4",
+     "dotenv": "^4.0.0"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  SyntaxError: /Users/jotannin/repos/willebot/package.json: Unexpected token : in JSON at position 14
+      at Object.parse (native)
+      at /Users/jotannin/.nvm/versions/node/v6.11.2/lib/node_modules/yarn/lib/cli.js:770:59
+      at next (native)
+      at step (/Users/jotannin/.nvm/versions/node/v6.11.2/lib/node_modules/yarn/lib/cli.js:92:30)
+      at /Users/jotannin/.nvm/versions/node/v6.11.2/lib/node_modules/yarn/lib/cli.js:103:13
