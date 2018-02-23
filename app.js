@@ -26,6 +26,12 @@ const rtm = new RtmClient(token, {
   useRtmConnect: true,
 });
 
+// Need a web client to find a channel where the app can post a message
+const web = new WebClient(token);
+
+// Load the current channels list asynchrously
+let channelListPromise = web.channels.list();
+
 // The client will emit an RTM.AUTHENTICATED event on when the connection data is available
 // (before the connection is open)
 rtm.on(CLIENT_EVENTS.RTM.AUTHENTICATED, (connectData) => {
