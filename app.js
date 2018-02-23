@@ -9,7 +9,7 @@ const bodyParser = require('body-parser')
 const axios = require('axios')
 const app = express()
 const PORT = process.env.PORT || 1337
-const { RtmClient, CLIENT_EVENTS, WebClient } = require('@slack/client');
+const { RtmClient, CLIENT_EVENTS, RTM_EVENT, WebClient } = require('@slack/client');
 
 const channelId = 'C9EN8C66T';
 
@@ -65,6 +65,23 @@ rtm.on(CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED, () => {
 
 // Start the connecting process
 rtm.start();
+
+rtm.on(RTM_EVENTS.MESSAGE, (message) => {
+  // For structure of `message`, see https://api.slack.com/events/message
+
+  // Skip messages that are from a bot or my own user ID
+  if ( (message.subtype && message.subtype === 'bot_message') ||
+    return;
+  }
+
+  rtm.sendMessage(`Did you say: ${message}`, channel.id)
+    // Returns a promise that resolves when the message is sent
+    .then(() => console.log(`Message sent to channel ${channel.name}`))
+    .catch(console.error)
+
+  // Log the message
+  console.log('New message: ', message);
+});
 
 app.use(bodyParser.json({extended: true}))
 
