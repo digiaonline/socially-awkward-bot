@@ -55,7 +55,7 @@ rtm.on(CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED, () => {
       console.log('This bot does not belong to any channels, invite it to at least one and try again')
     }
   })
-}
+})
 
 // Start the connecting process
 rtm.start();
