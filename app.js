@@ -70,7 +70,7 @@ rtm.on(RTM_EVENTS.MESSAGE, (message) => {
   // For structure of `message`, see https://api.slack.com/events/message
 
   // Skip messages that are from a bot or my own user ID
-  if ( (message.subtype && message.subtype === 'bot_message') ||
+  if ( (message.subtype && message.subtype === 'bot_message') {
     return;
   }
 
