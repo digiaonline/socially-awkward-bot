@@ -9,7 +9,7 @@ const bodyParser = require('body-parser')
 const axios = require('axios')
 const app = express()
 const PORT = process.env.PORT || 1337
-const { RtmClient, CLIENT_EVENTS, RTM_EVENT, WebClient } = require('@slack/client');
+const { RtmClient, CLIENT_EVENTS, RTM_EVENTS, WebClient } = require('@slack/client');
 
 const channelId = 'C9EN8C66T';
 
