@@ -41,7 +41,7 @@ app.post('/*', (req, res, next) => {
     const botPayload = {
       text: 'Ya cunts!'
     }
-    console.log(req.body)
+    console.log(req)
     try {
       if (userName !== 'willebot') {
         return res.status(200).json(botPayload)
