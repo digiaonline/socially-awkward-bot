@@ -32,17 +32,17 @@ rtm.on(CLIENT_EVENTS.RTM.AUTHENTICATED, (connectData) => {
   // Cache the data necessary for this app in memory
   appData.selfId = connectData.self.id;
   console.log(`Logged in as ${appData.selfId} of team ${connectData.team.id}`);
-});
+})
 
 // The client will emit an RTM.RTM_CONNECTION_OPENED the connection is ready for
 // sending and receiving messages
 rtm.on(CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED, () => {
-  console.log(`Ready`);
+  console.log(`Ready`)
   // Wait for the channels list response
   channelsListPromise.then((res) => {
 
     // Take any channel for which the bot is a member
-    const channel = res.channels.find(c => c.is_member);
+    const channel = res.channels.find(c => c.is_member)
 
     if (channel) {
       // We now have a channel ID to post a message in!
@@ -50,11 +50,12 @@ rtm.on(CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED, () => {
       rtm.sendMessage('Hello, world!', channel.id)
         // Returns a promise that resolves when the message is sent
         .then(() => console.log(`Message sent to channel ${channel.name}`))
-        .catch(console.error);
+        .catch(console.error)
     } else {
-      console.log('This bot does not belong to any channels, invite it to at least one and try again');
+      console.log('This bot does not belong to any channels, invite it to at least one and try again')
     }
-});
+  })
+}
 
 // Start the connecting process
 rtm.start();
