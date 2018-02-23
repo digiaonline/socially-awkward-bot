@@ -39,8 +39,9 @@ app.get('/*', (req, res, next) => {
 app.post('/*', (req, res, next) => {
     const userName = req.body.user_name
     const botPayload = {
-      text: 'Hello ya cunts!'
+      text: 'Ya cunts!'
     }
+    console.log(userName)
     try {
       if (userName !== 'willebot') {
         return res.status(200).json(botPayload)
