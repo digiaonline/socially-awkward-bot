@@ -9,19 +9,55 @@ const bodyParser = require('body-parser')
 const axios = require('axios')
 const app = express()
 const PORT = process.env.PORT || 1337
-const { WebClient } = require('@slack/client');
-const token = process.env.SLACK_TOKEN;
+const { RtmClient, CLIENT_EVENTS } = require('@slack/client');
 
-const web = new WebClient(token);
 const channelId = 'C9EN8C66T';
 
-// See: https://api.slack.com/methods/chat.postMessage
-web.chat.postMessage(channelId, 'Hello there')
-  .then((res) => {
-    // `res` contains information about the posted message
-    console.log('Message sent: ', res.ts);
-  })
-  .catch(console.error);
+// An access token (from your Slack app or custom integration - usually xoxb)
+const token = process.env.SLACK_TOKEN;
+
+// Cache of data
+const appData = {};
+
+// Initialize the RTM client with the recommended settings. Using the defaults for these
+// settings is deprecated.
+const rtm = new RtmClient(token, {
+  dataStore: false,
+  useRtmConnect: true,
+});
+
+// The client will emit an RTM.AUTHENTICATED event on when the connection data is available
+// (before the connection is open)
+rtm.on(CLIENT_EVENTS.RTM.AUTHENTICATED, (connectData) => {
+  // Cache the data necessary for this app in memory
+  appData.selfId = connectData.self.id;
+  console.log(`Logged in as ${appData.selfId} of team ${connectData.team.id}`);
+});
+
+// The client will emit an RTM.RTM_CONNECTION_OPENED the connection is ready for
+// sending and receiving messages
+rtm.on(CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED, () => {
+  console.log(`Ready`);
+  // Wait for the channels list response
+  channelsListPromise.then((res) => {
+
+    // Take any channel for which the bot is a member
+    const channel = res.channels.find(c => c.is_member);
+
+    if (channel) {
+      // We now have a channel ID to post a message in!
+      // use the `sendMessage()` method to send a simple string to a channel using the channel ID
+      rtm.sendMessage('Hello, world!', channel.id)
+        // Returns a promise that resolves when the message is sent
+        .then(() => console.log(`Message sent to channel ${channel.name}`))
+        .catch(console.error);
+    } else {
+      console.log('This bot does not belong to any channels, invite it to at least one and try again');
+    }
+});
+
+// Start the connecting process
+rtm.start();
 
 app.use(bodyParser.json({extended: true}))
 
