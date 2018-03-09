@@ -6,7 +6,6 @@ require('dotenv').config()
 // Local back-end boilerplate to fetch data from API
 const express = require('express')
 const bodyParser = require('body-parser')
-const axios = require('axios')
 const app = express()
 const PORT = process.env.PORT || 1337
 const {RtmClient, CLIENT_EVENTS, RTM_EVENTS, WebClient} = require('@slack/client')
@@ -87,6 +86,7 @@ rtm.on(RTM_EVENTS.MESSAGE, (message) => {
 app.use(bodyParser.json({extended: true}))
 
 // Define CORS headers you want to use
+/*
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Credentials', true)
@@ -97,48 +97,7 @@ app.use((req, res, next) => {
   )
   next()
 })
-
-app.get('/*', (req, res, next) => {
-
-  try {
-    // console.log(req.headers)
-    res.status(200).json('hello')
-  } catch(err) {
-    err.response
-      ? res.status(err.response.status).send(err.response.data)
-      : res.status(500).send({message: err.toString()})
-  }
-})
-
-app.post('/*', (req, res, next) => {
-  const userName = req.body.user_name
-  const botPayload = {
-    text: 'Ya cunts!',
-  }
-  console.log(req)
-  try {
-    if (userName !== 'willebot') {
-      return res.status(200).json(botPayload)
-    } else {
-      return res.status(200).end()
-    }
-  } catch(err) {
-    err.response
-      ? res.status(err.response.status).send(err.response.data)
-      : res.status(500).send({message: err.toString()})
-  }
-})
-
-app.put('/*', (req, res, next) => {
-
-  try {
-    res.status(200).json('hello')
-  } catch(err) {
-    err.response
-      ? res.status(err.response.status).send(err.response.data)
-      : res.status(500).send({message: err.toString()})
-  }
-})
+*/
 
 // SERVER LISTENER
 app.listen(PORT, () => {
